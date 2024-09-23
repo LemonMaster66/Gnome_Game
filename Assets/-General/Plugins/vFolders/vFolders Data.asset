@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adb9c12a8c6c949f7af83a3d238359d0, type: 3}
+  m_Name: vFolders Data
+  m_EditorClassIdentifier: 
+  folderDatas_byGuid:
+    keys:
+    - fa2940ca259a00244b7b2f7472b2769c
+    - 5b343e541259f6d4088c48fc080967ac
+    - f8bd7b99124ef274e9ffa12a4e769155
+    - 5400d95b229e60d499871ea7eb10cb4f
+    - d461b59f40772874e9b11b8e7611bac7
+    - 9c53962885c2c4f449125a979d6ad240
+    - 27fa2d8f644bacc489413773e3c4016b
+    - 24fcf5f187e39724e971c3713f2f4aaf
+    - 9b76ef5e8e1d9d54f9e8914a389ca5ae
+    - 7b8c10fdf1d378c4891520a3ea8ba0c5
+    - d0b1dbd42148b0340a23cfaf3d24eab7
+    - 86e6afacc9a2e894f9015af97aafe8dc
+    - 7d4c2bf1890419f43a58d8ba0c56abef
+    values:
+    - colorIndex: 1
+      iconNameOrGuid: ScriptableObject Icon
+    - colorIndex: 2
+      iconNameOrGuid: AnimationClip Icon
+    - colorIndex: 3
+      iconNameOrGuid: Material Icon
+    - colorIndex: 4
+      iconNameOrGuid: Mesh Icon
+    - colorIndex: 5
+      iconNameOrGuid: Prefab Icon
+    - colorIndex: 6
+      iconNameOrGuid: SceneAsset Icon
+    - colorIndex: 7
+      iconNameOrGuid: cs Script Icon
+    - colorIndex: 8
+      iconNameOrGuid: AudioClip Icon
+    - colorIndex: 10
+      iconNameOrGuid: Texture Icon
+    - colorIndex: 1
+      iconNameOrGuid: 
+    - colorIndex: 4
+      iconNameOrGuid: 
+    - colorIndex: 1
+      iconNameOrGuid: 
+    - colorIndex: 7
+      iconNameOrGuid: 

@@ -164,8 +164,8 @@ namespace VInspector
         // [MenuItem(dir + "Save state", false, 5556)] static void dassaaasddsasddc() { VInspectorState.Save(); }
         // [MenuItem(dir + "Save state", true, 5556)] static bool dassaadsaasddsasddc() { return !pluginDisabled; }
 
-        // [MenuItem(disableAttributes, false, 5557)] static void dadsadsdasadasdasdsadadsas() { attributesDisabled = !attributesDisabled; }
-        // [MenuItem(disableAttributes, true, 5557)] static bool dadsaddssdaasadsadadsdasadsas() { Menu.SetChecked(disableAttributes, attributesDisabled); return !pluginDisabled; }
+        [MenuItem(disableAttributes, false, 5557)] static void dadsadsdasadasdasdsadadsas() { attributesDisabled = !attributesDisabled; }
+        [MenuItem(disableAttributes, true, 5557)] static bool dadsaddssdaasadsadadsdasadsas() { Menu.SetChecked(disableAttributes, attributesDisabled); return !pluginDisabled; }
 
 
 

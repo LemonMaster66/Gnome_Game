@@ -14,5 +14,5 @@ AssetOrigin:
   productId: 182328
   packageName: Grabbit - Editor Physics Transforms
   packageVersion: 2023.0.3
-  assetPath: Assets/Plugins/Grabbit/Editor/Scripts/Utilities/ListExt.cs
+  assetPath: Assets/-General/Plugins/Grabbit/Editor/Scripts/Utilities/ListExt.cs
   uploadId: 633054

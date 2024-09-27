@@ -3,7 +3,7 @@ using UnityEngine;
 public class ExtraGravity : MonoBehaviour
 {
     private Rigidbody rb;
-    public float Gravity;
+    public float gravity;
 
 
     void Awake()
@@ -12,7 +12,7 @@ public class ExtraGravity : MonoBehaviour
     }
     void FixedUpdate()
     {
-        rb.AddForce(Physics.gravity * Gravity /10);
+        rb.AddForce(Physics.gravity * gravity /10);
     }
 }
 

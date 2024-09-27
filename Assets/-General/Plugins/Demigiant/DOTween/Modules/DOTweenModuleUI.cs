@@ -166,7 +166,6 @@ namespace DG.Tweening
         #endregion
 
         /*
-        
         #region Outline
 
         /// <summary>Tweens a Outline's effectColor to the given value.
@@ -200,7 +199,6 @@ namespace DG.Tweening
         }
 
         #endregion
-
         */
 
         #region RectTransform

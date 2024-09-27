@@ -30,6 +30,13 @@ MonoBehaviour:
         - globalObjectIdString: GlobalObjectId_V1-2-a79ad91dfa16445428d642a89c604e5e-2138545194-0
         - globalObjectIdString: GlobalObjectId_V1-2-a79ad91dfa16445428d642a89c604e5e-503478967-0
         - globalObjectIdString: GlobalObjectId_V1-2-a79ad91dfa16445428d642a89c604e5e-988269911-0
+        - globalObjectIdString: GlobalObjectId_V1-2-a79ad91dfa16445428d642a89c604e5e-891119423-0
+        - globalObjectIdString: GlobalObjectId_V1-2-a79ad91dfa16445428d642a89c604e5e-1404371140-0
+        - globalObjectIdString: GlobalObjectId_V1-2-a79ad91dfa16445428d642a89c604e5e-1431246437-0
+        - globalObjectIdString: GlobalObjectId_V1-2-a79ad91dfa16445428d642a89c604e5e-1766801006-0
+        - globalObjectIdString: GlobalObjectId_V1-2-a79ad91dfa16445428d642a89c604e5e-2672979640364825752-0
+        - globalObjectIdString: GlobalObjectId_V1-2-a79ad91dfa16445428d642a89c604e5e-323770166335454842-0
+        - globalObjectIdString: GlobalObjectId_V1-2-a79ad91dfa16445428d642a89c604e5e-7565522433106420615-0
         values:
         - colorIndex: 1
           iconNameOrGuid: Favorite
@@ -41,3 +48,17 @@ MonoBehaviour:
           iconNameOrGuid: TrailRenderer Icon
         - colorIndex: 9
           iconNameOrGuid: Camera Icon
+        - colorIndex: 0
+          iconNameOrGuid: DirectionalLight Icon
+        - colorIndex: 0
+          iconNameOrGuid: PreMatCube
+        - colorIndex: 0
+          iconNameOrGuid: SphereCollider Icon
+        - colorIndex: 5
+          iconNameOrGuid: AvatarMask On Icon
+        - colorIndex: 5
+          iconNameOrGuid: AvatarMask On Icon
+        - colorIndex: 1
+          iconNameOrGuid: PreMatCube
+        - colorIndex: 0
+          iconNameOrGuid: SphereCollider Icon

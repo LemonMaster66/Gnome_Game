@@ -1,19 +1,20 @@
 using System;
 using PalexUtilities;
+using Sirenix.OdinInspector;
+using Sirenix.OdinInspector.Editor.Drawers;
 using Unity.Cinemachine;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using VInspector;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [Tab("Main")]
-    public float Speed            = 50;
-    public float MaxSpeed         = 80;
-    public float CounterMovement  = 10;
-    public float JumpForce        = 8;
-    public float Gravity          = 100;
+    public float Speed              = 50;
+    public float MaxSpeed           = 80;
+    public float CounterMovement    = 10;
+    public float SlopeSlipperyness  = 2;
+    public float JumpForce          = 8;
+    public float Gravity            = 100;
 
 
     [Header("States")]
@@ -34,13 +35,14 @@ public class PlayerMovement : MonoBehaviour
 
 
     #region Debug Stats
-        [Tab("Settings")]
-        public Vector3     TargetScale;
         public Vector3     PlayerVelocity;
         public Vector3     SmoothVelocity;
         public float       VelocityMagnitude;
         public float       ForwardVelocityMagnitude;
         public Vector3     VelocityXZ;
+        [Space(5)]
+        [Unit(Units.Degree)]
+        public float slopeAngle;
         [Space(5)]
         public Vector3 CamF;
         public Vector3 CamR;
@@ -48,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
         public Vector3 Movement;
         public float   MovementX;
         public float   MovementY;
+        public Vector3 CorrectMovement;
         [Space(8)]
         public float CoyoteTime;
         public float JumpBuffer;
@@ -63,7 +66,7 @@ public class PlayerMovement : MonoBehaviour
         [HideInInspector] public Transform    Camera;
 
         private PlayerStats  playerStats;
-        private PlayerSFX    playerSFX;
+        //private PlayerSFX    playerSFX;
         private GroundCheck  groundCheck;
     #endregion
 
@@ -75,7 +78,7 @@ public class PlayerMovement : MonoBehaviour
         rb      = GetComponent<Rigidbody>();
 
         //Assign Scripts
-        playerSFX    = FindAnyObjectByType<PlayerSFX>();
+        //playerSFX    = FindAnyObjectByType<PlayerSFX>();
         playerStats  = GetComponent<PlayerStats>();
         groundCheck  = GetComponentInChildren<GroundCheck>();
 
@@ -86,7 +89,6 @@ public class PlayerMovement : MonoBehaviour
         _maxSpeed  = MaxSpeed;
         _speed     = Speed;
         _gravity   = Gravity;
-        TargetScale.y = 1.5f;
     }
 
 
@@ -94,6 +96,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if(CoyoteTime > 0) CoyoteTime = Math.Clamp(CoyoteTime - Time.deltaTime, 0, 100);
         if(JumpBuffer > 0) JumpBuffer = Math.Clamp(JumpBuffer - Time.deltaTime, 0, 100);
+
+        
     }
 
     void FixedUpdate()
@@ -124,21 +128,49 @@ public class PlayerMovement : MonoBehaviour
             //Gravity
             rb.AddForce(Physics.gravity * Gravity /10);
 
+            // Calculate the Forward Angle
+            float targetAngle = Mathf.Atan2(rb.linearVelocity.x, rb.linearVelocity.z) * Mathf.Rad2Deg;
+            Quaternion toRotation = Quaternion.Euler(0f, targetAngle, 0f);
+
             LockToMaxSpeed();
         #endregion
         //**********************************
 
-        transform.localScale = Vector3.Slerp(transform.localScale, TargetScale, 0.175f);
+        // Slope Correction
+        CorrectMovement = Movement;
+        if (Physics.Raycast(transform.position + (Vector3.down * 0.9f), Vector3.down, out RaycastHit hit, 1f))
+        {
+            if (Vector3.Angle(hit.normal, Vector3.up) <= 45)
+            {
+                Vector3 slopeDirection = Vector3.ProjectOnPlane(Movement, hit.normal).normalized;
+                CorrectMovement = new Vector3(slopeDirection.x, Mathf.Clamp(slopeDirection.y, -0.5f, 0.2f), slopeDirection.z);
 
+                Tools.DrawThickRay(hit.point, rb.linearVelocity, Color.red, 0, 0.001f);
+                Tools.DrawThickRay(hit.point, CorrectMovement*10, Color.green, 0, 0.001f);
+            }
+        }
+
+        
         // Movement Code
         if(!Paused && !playerStats.Dead && CanMove)
         {
             Movement = (CamF * MovementY + CamR * MovementX).normalized;
-            rb.AddForce(Movement * Speed);
+            rb.AddForce(CorrectMovement * Speed);
+            rb.AddForce(VelocityXZ * -(CounterMovement / 10));
         }
 
-        //CounterMovement
-        rb.AddForce(VelocityXZ * -(CounterMovement / 10));
+        ApplySlopeStickForce();
+
+        if(!Grounded && !HasJumped && rb.linearVelocity.y > 0)
+        {
+            if (Physics.Raycast(transform.position, Vector3.down, 1f))
+                rb.AddForce(Vector3.down*200, ForceMode.Acceleration);
+        }
+
+
+        
+
+        if(VelocityXZ.magnitude > 0.5 && Grounded) transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 0.6f);
 
         #region Rounding Values
             PlayerVelocity      = rb.linearVelocity;
@@ -174,12 +206,10 @@ public class PlayerMovement : MonoBehaviour
     public void Jump()
     {
         HasJumped = true;
-        rb.linearVelocity = new Vector3(rb.linearVelocity.x, math.clamp(rb.linearVelocity.y, 0, math.INFINITY), rb.linearVelocity.z);
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, math.clamp(rb.linearVelocity.y, 0, 1), rb.linearVelocity.z);
         rb.AddForce(Vector3.up * JumpForce, ForceMode.VelocityChange);
 
-        CrouchState(false);
-
-        playerSFX.PlayRandomSound(playerSFX.Jump, 1, 1, 0.15f);
+        //playerSFX.PlayRandomSound(playerSFX.Jump, 1, 1, 0.15f);
     } 
 
     public void OnRun(InputAction.CallbackContext context)
@@ -211,56 +241,10 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void OnCrouch(InputAction.CallbackContext context)
-    {
-        if(Paused) return;
-
-        if(context.started && !Crouching) 
-        {
-            HoldingCrouch = true;
-            CrouchState(true);
-        }
-        if(context.canceled && Crouching)
-        {
-            HoldingCrouch = false;
-            CrouchState(false);
-        }
-    }
-    public void CrouchState(bool state)
-    {
-        if(state)
-        {
-            RunState(false);
-
-            Crouching = true;
-            TargetScale.y = 0.75f;
-            Speed = 50;
-        }
-        else
-        {
-            Crouching = false;
-            TargetScale.y = 1.5f;
-            Speed = _speed;
-
-            if(HoldingRun) RunState(true);
-        }
-    }
-
 
     //***********************************************************************
     //***********************************************************************
     //Extra Logic
-
-    // public void OnPause(InputAction.CallbackContext context)
-    // {
-    //     if(context.started)
-    //     {
-    //         Pause(bool State)
-
-    //         Debug.Log("InputLock = " + Paused);
-    //     }
-    // }
-
 
     public void Pause(bool State)
     {
@@ -284,6 +268,24 @@ public class PlayerMovement : MonoBehaviour
         rb.linearVelocity = newVelocity;
     }
 
+    private void ApplySlopeStickForce()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position+(Vector3.down*0.9f), Vector3.down, out hit, 1.5f))
+        {
+            Vector3 normal = hit.normal;
+            slopeAngle = Vector3.Angle(normal, Vector3.up);
+
+            if (slopeAngle > 0 && slopeAngle <= 45)
+            {
+                // Calculate downward force based on the slope angle
+                Vector3 slopeDirection = Vector3.ProjectOnPlane(Vector3.down, normal).normalized*-1;
+                Debug.DrawRay(hit.point, slopeDirection * 3, Color.white);
+                rb.AddForce(slopeDirection * (slopeAngle/(SlopeSlipperyness/100) - (slopeAngle-1.3f)), ForceMode.Force);
+            }
+        }
+    }
+
     public void SetGrounded(bool state) 
     {
         Grounded = state;
@@ -299,13 +301,14 @@ public class PlayerMovement : MonoBehaviour
         else return false;
     }
 
+    [Button(DisplayParameters = true, Style = ButtonStyle.FoldoutButton)]
     public void Teleport(Transform newTransform)
     {
         rb.position = newTransform.position;
-        CinemachineVirtualCamera cinemachine = FindAnyObjectByType<CinemachineVirtualCamera>();
-        CinemachinePOV pov = cinemachine.GetCinemachineComponent<CinemachinePOV>();
+        CinemachineCamera cinemachine = FindAnyObjectByType<CinemachineCamera>();
+        CinemachineOrbitalFollow pov = cinemachine.GetComponent<CinemachineOrbitalFollow>();
 
-        pov.m_VerticalAxis.Value   = newTransform.eulerAngles.x;
-        pov.m_HorizontalAxis.Value = newTransform.eulerAngles.y;
+        pov.VerticalAxis.Value   = newTransform.eulerAngles.x;
+        pov.HorizontalAxis.Value = newTransform.eulerAngles.y;
     }
 }

@@ -28,7 +28,7 @@ namespace Febucci.UI.Core.Editors
             waitForNewLines = serializedObject.FindProperty("waitForNewLines");
             waitForLastCharacter = serializedObject.FindProperty("waitForLastCharacter");
             useTypewriterWaitForDisappearances = new PropertyWithDifferentLabel(serializedObject, "useTypewriterWaitForDisappearances", "Use Typewriter Wait Times");
-            disappearanceSpeedMultiplier = new PropertyWithDifferentLabel(serializedObject, "disappearanceSpeedMultiplier", "Typewriter Speed Multiplier");
+            disappearanceSpeedMultiplier = new PropertyWithDifferentLabel(serializedObject, "disappearanceSpeedMultiplier", "Typewriter speed Multiplier");
             disappearanceWaitTime = new PropertyWithDifferentLabel(serializedObject, "disappearanceWaitTime", "Disappearances Wait");
         }
 

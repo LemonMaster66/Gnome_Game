@@ -1,4 +1,5 @@
-﻿using Febucci.UI.Core;
+
+using Febucci.UI.Core;
 using Febucci.UI.Effects;
 using UnityEngine;
 using UnityEngine.Serialization;

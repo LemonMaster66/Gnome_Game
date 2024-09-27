@@ -13,5 +13,5 @@ AssetOrigin:
   productId: 252297
   packageName: vInspector 2
   packageVersion: 2.0.7
-  assetPath: Assets/vInspector/VInspectorAssetPreview.shader
+  assetPath: Assets/-General/Plugins/vInspector/VInspectorAssetPreview.shader
   uploadId: 684623

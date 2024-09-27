@@ -33,10 +33,14 @@ public class GroundCheck : MonoBehaviour
         if(GroundObject == null)
         {
             if(playerMovement.JumpBuffer > 0) playerMovement.Jump();
-            else playerMovement.HasJumped = false;
-
-            cameraFX.ImpulseSource.GenerateImpulseWithForce(Math.Clamp(playerMovement.SmoothVelocity.y, -20, 0) * (cameraFX.ImpulseSource.enabled ? 1 : 0));
-            playerSFX.PlayRandomSound(playerSFX.Land, playerMovement.SmoothVelocity.y*-1/50, 1f, 0.15f, false);
+            else 
+            {
+                playerMovement.HasJumped = false;
+                if(playerMovement.MovementX == 0 && playerMovement.MovementY == 0)
+                {
+                    playerMovement.rb.linearVelocity = playerMovement.Movement;
+                }
+            }
         }
         
         GroundObject = other.gameObject;

@@ -10,5 +10,5 @@ AssetOrigin:
   productId: 252297
   packageName: vInspector 2
   packageVersion: 2.0.7
-  assetPath: Assets/vInspector/VInspector.asmdef
+  assetPath: Assets/-General/Plugins/vInspector/VInspector.asmdef
   uploadId: 684623

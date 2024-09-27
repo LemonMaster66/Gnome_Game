@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableUIToolkitSupport: 1
   useOldUnityObjectField: 0
-  useOldUnityPreviewField: 0
+  useOldUnityPreviewField: 1
   useOldTypeSelector: 0
   useNewObjectSelector: 1
   showNoneItem: 1

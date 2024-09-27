@@ -19,9 +19,6 @@ public class PlayerStats : MonoBehaviour
     public PlayerMovement playerMovement;
     public PlayerSFX      playerSFX;
     public CameraFX       cameraFX;
-    public Image _damageScreen;
-    public Image _deathScreen;
-    public GameObject textPopup;
 
 
 
@@ -31,15 +28,11 @@ public class PlayerStats : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         playerSFX      = FindAnyObjectByType<PlayerSFX>();
         cameraFX       = FindAnyObjectByType<CameraFX>();
-
-        GameObject canvas = GameObject.Find("Canvas");
-        if(canvas != null) _damageScreen = canvas.transform.GetChild(0).GetComponent<Image>();
-        if(canvas != null) _deathScreen  = canvas.transform.GetChild(1).GetComponent<Image>();
     }
 
     void Update()
     {
-        if(_damageScreen != null) _damageScreen.color = new Color(1,1,1, !Dead ? (Health / 80*-1)+1 : 0);
+        
     }
 
 
@@ -59,18 +52,8 @@ public class PlayerStats : MonoBehaviour
     public void Die()
     {
         Dead = true;
-        _deathScreen.color = new Color(1,1,1,1);
         cameraFX.GetComponent<CinemachineImpulseSource>().GenerateImpulseWithForce(-8);
         playerSFX.StopSound(playerSFX.Damage);
         playerSFX.PlaySound(playerSFX.Death);
-    }
-
-
-    public void SpawnTextUI(string text)
-    {
-        GameObject canvas = GameObject.Find("Canvas");
-        GameObject MoneyTextObj = Instantiate(textPopup, canvas.transform.position, Quaternion.identity, canvas.transform);
-        MoneyTextObj.GetComponent<TextMeshProUGUI>().text = text;
-        MoneyTextObj.transform.position = new Vector3(50, 25, 0);
     }
 }

@@ -35,5 +35,5 @@ AssetOrigin:
   productId: 182328
   packageName: Grabbit - Editor Physics Transforms
   packageVersion: 2023.0.3
-  assetPath: Assets/Plugins/Grabbit/VHACD/liblibvhacd.dylib
+  assetPath: Assets/-General/Plugins/Grabbit/VHACD/liblibvhacd.dylib
   uploadId: 633054

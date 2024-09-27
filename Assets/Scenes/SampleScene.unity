@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1.8
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: d48a7646f5d0547e889733d84b50cb9f, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -182,7 +182,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 9149e0d1908dd0b46be5fca35d065e02, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -291,7 +291,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 9149e0d1908dd0b46be5fca35d065e02, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -956,7 +956,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 9149e0d1908dd0b46be5fca35d065e02, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1065,7 +1065,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 9149e0d1908dd0b46be5fca35d065e02, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1319,7 +1319,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 988269911}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.000000007445247, y: 1.5162935e-10, z: 1.1497417e-11, w: 1}
+  m_LocalRotation: {x: -0.0000000037171068, y: -0.0000000018688127, z: 1.0357513e-10, w: 1}
   m_LocalPosition: {x: 0.000000014890439, y: 5.050687e-11, z: -5.629298e-10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1528,7 +1528,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 9149e0d1908dd0b46be5fca35d065e02, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1668,7 +1668,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 9149e0d1908dd0b46be5fca35d065e02, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1991,7 +1991,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cc4f88b974c3d44eb952df0237e4c59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 125
+  Speed: 100
   MaxSpeed: 80
   CounterMovement: 125
   SlopeSlipperyness: 63
@@ -2012,6 +2012,7 @@ MonoBehaviour:
   ForwardVelocityMagnitude: 0
   VelocityXZ: {x: 4.0196656e-38, y: 0, z: 0.0038542151}
   slopeAngle: 14.999977
+  slopeCorrectionVector: {x: 0, y: 0, z: 0}
   CamF: {x: -0.9992646, y: 0, z: 0.038343776}
   CamR: {x: 0.038343776, y: 0, z: 0.99926466}
   Movement: {x: 0, y: 0, z: 0}

@@ -43,6 +43,7 @@ public class PlayerMovement : MonoBehaviour
         [Space(5)]
         [Unit(Units.Degree)]
         public float slopeAngle;
+        public Vector3 slopeCorrectionVector;
         [Space(5)]
         public Vector3 CamF;
         public Vector3 CamR;
@@ -96,8 +97,6 @@ public class PlayerMovement : MonoBehaviour
     {
         if(CoyoteTime > 0) CoyoteTime = Math.Clamp(CoyoteTime - Time.deltaTime, 0, 100);
         if(JumpBuffer > 0) JumpBuffer = Math.Clamp(JumpBuffer - Time.deltaTime, 0, 100);
-
-        
     }
 
     void FixedUpdate()
@@ -140,7 +139,7 @@ public class PlayerMovement : MonoBehaviour
         CorrectMovement = Movement;
         if (Physics.Raycast(transform.position + (Vector3.down * 0.9f), Vector3.down, out RaycastHit hit, 1f))
         {
-            if (Vector3.Angle(hit.normal, Vector3.up) <= 45)
+            if (Vector3.Angle(hit.normal, Vector3.up) <= 45 && !HasJumped)
             {
                 Vector3 slopeDirection = Vector3.ProjectOnPlane(Movement, hit.normal).normalized;
                 CorrectMovement = new Vector3(slopeDirection.x, Mathf.Clamp(slopeDirection.y, -0.5f, 0.2f), slopeDirection.z);
@@ -210,7 +209,7 @@ public class PlayerMovement : MonoBehaviour
         rb.AddForce(Vector3.up * JumpForce, ForceMode.VelocityChange);
 
         //playerSFX.PlayRandomSound(playerSFX.Jump, 1, 1, 0.15f);
-    } 
+    }
 
     public void OnRun(InputAction.CallbackContext context)
     {
@@ -276,12 +275,12 @@ public class PlayerMovement : MonoBehaviour
             Vector3 normal = hit.normal;
             slopeAngle = Vector3.Angle(normal, Vector3.up);
 
-            if (slopeAngle > 0 && slopeAngle <= 45)
+            if (slopeAngle > 0 && slopeAngle <= 45 && !HasJumped)
             {
                 // Calculate downward force based on the slope angle
-                Vector3 slopeDirection = Vector3.ProjectOnPlane(Vector3.down, normal).normalized*-1;
-                Debug.DrawRay(hit.point, slopeDirection * 3, Color.white);
-                rb.AddForce(slopeDirection * (slopeAngle/(SlopeSlipperyness/100) - (slopeAngle-1.3f)), ForceMode.Force);
+                slopeCorrectionVector = Vector3.ProjectOnPlane(Vector3.down, normal).normalized*-1;
+                Debug.DrawRay(hit.point, slopeCorrectionVector * 3, Color.white);
+                rb.AddForce(slopeCorrectionVector * (slopeAngle/(SlopeSlipperyness/100) - (slopeAngle-1.3f)), ForceMode.Force);
             }
         }
     }

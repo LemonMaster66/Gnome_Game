@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class GroundCheck : MonoBehaviour
 {
-    private PlayerMovement playerMovement;
+    private PlayerMovement player;
     private PlayerSFX      playerSFX;
     private CameraFX       cameraFX;
 
@@ -13,10 +13,48 @@ public class GroundCheck : MonoBehaviour
     void Awake()
     {
         //Assign Components
-        playerMovement = GetComponentInParent<PlayerMovement>();
+        player = GetComponentInParent<PlayerMovement>();
         playerSFX      = FindAnyObjectByType<PlayerSFX>();
         cameraFX       = FindAnyObjectByType<CameraFX>();
     }
+
+    void Update()
+    {
+        //CheckStep();
+    }
+
+    // public void CheckStep()
+    // {
+    //     RaycastHit hit;
+    //     float stepHeight = 0.5f;
+    //     Vector3 FloorPos = player.transform.position - new Vector3(0, player.transform.localScale.y, 0);
+    //     Vector3 StartPos = FloorPos + player.Movement + Vector3.up*stepHeight;
+
+    //     DebugPlus.DrawWireSphere(FloorPos, 0.05f);
+    //     DebugPlus.DrawWireSphere(StartPos, 0.05f);
+
+    //     if (Physics.Raycast(StartPos, Vector3.down, out hit, 2f))
+    //     {
+    //         float distanceFromFloor = (FloorPos.y - hit.point.y) *-1;
+
+    //         //Debug.Log("Step: " + Math.Round(distanceFromFloor, 3));
+
+    //         if(Vector3.Dot(player.slopeVector, hit.normal) < 0.3f) return;
+            
+    //         //Step Up
+    //         if (Grounded && !player.HasJumped && distanceFromFloor > 0)
+    //         {
+    //             Debug.DrawRay(StartPos, Vector3.down/2, Color.green);
+    //             player.stepClimb(distanceFromFloor);
+    //         }
+    //         //Step Down
+    //         if(Grounded && !player.HasJumped && distanceFromFloor < 0)
+    //         {
+    //             Debug.DrawRay(StartPos, Vector3.down/2, Color.green);
+    //             player.stepClimb(distanceFromFloor/2);
+    //         }
+    //     }
+    // }
 
     public bool CheckGround()
     {
@@ -26,19 +64,19 @@ public class GroundCheck : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == playerMovement.gameObject) return;
-        playerMovement.SetGrounded(true);
+        if (other.gameObject == player.gameObject) return;
+        player.SetGrounded(true);
         Grounded = true;
 
         if(GroundObject == null)
         {
-            if(playerMovement.JumpBuffer > 0) playerMovement.Jump();
+            if(player.JumpBuffer > 0) player.Jump();
             else 
             {
-                playerMovement.HasJumped = false;
-                if(playerMovement.MovementX == 0 && playerMovement.MovementY == 0)
+                player.HasJumped = false;
+                if(player.MovementX == 0 && player.MovementY == 0 && player.slopeAngle <= 45)
                 {
-                    playerMovement.rb.linearVelocity = playerMovement.Movement;
+                    player.rb.linearVelocity = player.Movement;
                 }
             }
         }
@@ -48,18 +86,18 @@ public class GroundCheck : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject == playerMovement.gameObject) return;
-        playerMovement.SetGrounded(false);
+        if (other.gameObject == player.gameObject) return;
+        player.SetGrounded(false);
         GroundObject = null;
         Grounded = false;
 
-        playerMovement.CoyoteTime = 0.3f;
+        player.CoyoteTime = 0.3f;
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject == playerMovement.gameObject) return;
-        playerMovement.SetGrounded(true);
+        if (other.gameObject == player.gameObject) return;
+        player.SetGrounded(true);
         GroundObject = other.gameObject;
         Grounded = true;
     }

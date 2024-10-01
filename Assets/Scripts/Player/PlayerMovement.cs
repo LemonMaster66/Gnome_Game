@@ -43,6 +43,7 @@ public class PlayerMovement : MonoBehaviour
         [Space(5)]
         [Unit(Units.Degree)]
         public float slopeAngle;
+        public Vector3 slopeVector;
         public Vector3 slopeCorrectionVector;
         [Space(5)]
         public Vector3 CamF;
@@ -160,7 +161,7 @@ public class PlayerMovement : MonoBehaviour
 
         ApplySlopeStickForce();
 
-        if(!Grounded && !HasJumped && rb.linearVelocity.y > 0)
+        if(!Grounded && !HasJumped && rb.linearVelocity.y > 0 && slopeAngle < 45)
         {
             if (Physics.Raycast(transform.position, Vector3.down, 1f))
                 rb.AddForce(Vector3.down*200, ForceMode.Acceleration);
@@ -189,8 +190,6 @@ public class PlayerMovement : MonoBehaviour
         Vector2 inputVector = MovementValue.ReadValue<Vector2>();
         MovementX = inputVector.x;
         MovementY = inputVector.y;
-
-        //if(MovementX == 0 && MovementY == 0) playerSFX.stepTimer = 0;
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -207,8 +206,6 @@ public class PlayerMovement : MonoBehaviour
         HasJumped = true;
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, math.clamp(rb.linearVelocity.y, 0, 1), rb.linearVelocity.z);
         rb.AddForce(Vector3.up * JumpForce, ForceMode.VelocityChange);
-
-        //playerSFX.PlayRandomSound(playerSFX.Jump, 1, 1, 0.15f);
     }
 
     public void OnRun(InputAction.CallbackContext context)
@@ -272,18 +269,23 @@ public class PlayerMovement : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position+(Vector3.down*0.9f), Vector3.down, out hit, 1.5f))
         {
-            Vector3 normal = hit.normal;
-            slopeAngle = Vector3.Angle(normal, Vector3.up);
+            slopeVector = hit.normal;
+            slopeAngle = Vector3.Angle(slopeVector, Vector3.up);
 
             if (slopeAngle > 0 && slopeAngle <= 45 && !HasJumped)
             {
                 // Calculate downward force based on the slope angle
-                slopeCorrectionVector = Vector3.ProjectOnPlane(Vector3.down, normal).normalized*-1;
+                slopeCorrectionVector = Vector3.ProjectOnPlane(Vector3.down, slopeVector).normalized*-1;
                 Debug.DrawRay(hit.point, slopeCorrectionVector * 3, Color.white);
                 rb.AddForce(slopeCorrectionVector * (slopeAngle/(SlopeSlipperyness/100) - (slopeAngle-1.3f)), ForceMode.Force);
             }
         }
     }
+
+    // public void stepClimb(float Vector)
+	// {
+    //     rb.AddForce((Vector3.up * Vector * Time.deltaTime)/10);
+	// }
 
     public void SetGrounded(bool state) 
     {

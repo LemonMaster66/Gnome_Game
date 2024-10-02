@@ -28,29 +28,66 @@ MonoBehaviour:
     - 86e6afacc9a2e894f9015af97aafe8dc
     - 7d4c2bf1890419f43a58d8ba0c56abef
     values:
-    - colorIndex: 1
-      iconNameOrGuid: ScriptableObject Icon
-    - colorIndex: 2
-      iconNameOrGuid: AnimationClip Icon
-    - colorIndex: 3
-      iconNameOrGuid: Material Icon
-    - colorIndex: 4
-      iconNameOrGuid: Mesh Icon
-    - colorIndex: 5
-      iconNameOrGuid: Prefab Icon
-    - colorIndex: 6
-      iconNameOrGuid: SceneAsset Icon
-    - colorIndex: 7
-      iconNameOrGuid: cs Script Icon
-    - colorIndex: 8
-      iconNameOrGuid: AudioClip Icon
-    - colorIndex: 10
-      iconNameOrGuid: Texture Icon
-    - colorIndex: 1
-      iconNameOrGuid: 
-    - colorIndex: 4
-      iconNameOrGuid: 
-    - colorIndex: 1
-      iconNameOrGuid: 
-    - colorIndex: 7
-      iconNameOrGuid: 
+    - iconNameOrGuid: ScriptableObject Icon
+      colorIndex: 1
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: AnimationClip Icon
+      colorIndex: 2
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: Material Icon
+      colorIndex: 3
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: Mesh Icon
+      colorIndex: 4
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: Prefab Icon
+      colorIndex: 5
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: SceneAsset Icon
+      colorIndex: 6
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: cs Script Icon
+      colorIndex: 7
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: AudioClip Icon
+      colorIndex: 8
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: Texture Icon
+      colorIndex: 10
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: 
+      colorIndex: 1
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: 
+      colorIndex: 4
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: 
+      colorIndex: 1
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: 
+      colorIndex: 7
+      isIconRecursive: 0
+      isColorRecursive: 0
+  bookmarks:
+  - guid: 9b76ef5e8e1d9d54f9e8914a389ca5ae
+  - guid: 24fcf5f187e39724e971c3713f2f4aaf
+  - guid: 27fa2d8f644bacc489413773e3c4016b
+  - guid: 9c53962885c2c4f449125a979d6ad240
+  - guid: d461b59f40772874e9b11b8e7611bac7
+  - guid: 5400d95b229e60d499871ea7eb10cb4f
+  - guid: f8bd7b99124ef274e9ffa12a4e769155
+  - guid: 5b343e541259f6d4088c48fc080967ac
+  - guid: fa2940ca259a00244b7b2f7472b2769c
+  - guid: 00000000000000001000000000000000

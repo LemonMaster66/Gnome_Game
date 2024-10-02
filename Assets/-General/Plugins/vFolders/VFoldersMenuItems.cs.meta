@@ -11,8 +11,8 @@ MonoImporter:
   assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
-  productId: 263644
+  productId: 255470
   packageName: vFolders 2
-  packageVersion: 2.0.11
-  assetPath: Assets/vFolders/VFoldersMenuItems.cs
-  uploadId: 675652
+  packageVersion: 2.1.2
+  assetPath: Assets/-General/Plugins/vFolders/VFoldersMenuItems.cs
+  uploadId: 696388

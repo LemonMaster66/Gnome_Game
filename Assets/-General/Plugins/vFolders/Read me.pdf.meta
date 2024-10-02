@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 443dd991dbef94630a18f43d266b5e33
+guid: 6c1da0cc833e64f4c96ba170387ea7a6
 DefaultImporter:
   externalObjects: {}
   userData: 
@@ -7,8 +7,8 @@ DefaultImporter:
   assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
-  productId: 263644
+  productId: 255470
   packageName: vFolders 2
-  packageVersion: 2.0.11
-  assetPath: Assets/vFolders/Manual.pdf
-  uploadId: 675652
+  packageVersion: 2.1.2
+  assetPath: Assets/-General/Plugins/vFolders/Read me.pdf
+  uploadId: 696388

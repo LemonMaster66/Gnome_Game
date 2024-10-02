@@ -18,9 +18,13 @@ namespace VFolders
 {
     public class VFoldersPalette : ScriptableObject
     {
-        public List<Color> colors = new List<Color>();
+        public List<Color> colors = new();
 
         public bool colorsEnabled;
+
+        public float colorSaturation = 1;
+        public float colorBrightness = 1;
+        public bool colorGradientsEnabled = true;
 
         public void ResetColors()
         {
@@ -34,6 +38,7 @@ namespace VFolders
             this.Dirty();
 
         }
+
 
         public static Color GetDefaultColor(int colorIndex)
         {
@@ -115,10 +120,15 @@ namespace VFolders
                 if (colorIndex < greyColorsCount) return;
                 if (isDarkTheme) return;
 
-                color = HSLToRGB((colorIndex - greyColorsCount.ToFloat()) / rainbowColorsCount, .62f, .8f);
+                color = HSLToRGB((colorIndex - greyColorsCount.ToFloat()) / rainbowColorsCount, .99f, .75f);
 
-                // color.a = .1f;
-                color.a = 1f;
+                if (colorIndex == 0)
+                    color *= 1.1f;
+
+                if (colorIndex == 1)
+                    color *= 1.05f;
+
+                color.a = .1f;
 
             }
 
@@ -137,13 +147,13 @@ namespace VFolders
 
 
 
-        public List<IconRow> iconRows = new List<IconRow>();
+        public List<IconRow> iconRows = new();
 
         [System.Serializable]
         public class IconRow
         {
-            public List<string> builtinIcons = new List<string>(); // names
-            public List<string> customIcons = new List<string>(); // guids
+            public List<string> builtinIcons = new(); // names
+            public List<string> customIcons = new(); // guids
 
             public bool enabled = true;
 
@@ -185,11 +195,11 @@ namespace VFolders
             }));
             iconRows.Add(new IconRow(new[]
             {
-#if UNITY_6000_0_OR_NEWER
+            #if UNITY_6000_0_OR_NEWER
                 "PhysicsMaterial Icon",
-#else
+            #else
                 "PhysicMaterial Icon",
-#endif
+            #endif
                 "BoxCollider Icon",
                 "TerrainCollider Icon",
                 "MeshCollider Icon",
@@ -230,7 +240,7 @@ namespace VFolders
         [ContextMenu("Export palette")]
         public void Export()
         {
-            var packagePath = EditorUtility.SaveFilePanel("Export vHierarchy Palette", "", this.GetPath().GetFilename(withExtension: false), "unitypackage");
+            var packagePath = EditorUtility.SaveFilePanel("Export vFolders Palette", "", this.GetPath().GetFilename(withExtension: false), "unitypackage");
 
             var iconPaths = iconRows.SelectMany(r => r.customIcons).Select(r => r.ToPath()).Where(r => !r.IsNullOrEmpty());
 
@@ -243,7 +253,14 @@ namespace VFolders
 
 
 
-        void Reset() { ResetColors(); ResetIcons(); }
+        void Reset()
+        {
+            ResetColors();
+            ResetIcons();
+
+            VFolders.folderInfoCache.Clear();
+
+        }
 
     }
 }

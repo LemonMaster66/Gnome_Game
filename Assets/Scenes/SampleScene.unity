@@ -9485,20 +9485,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 70
+  AirSpeed: 50
   MaxSpeed: 80
+  AirMaxSpeed: 50
   CounterMovement: 100
+  AirCounterMovement: 50
   SlopeSlipperyness: 63
   JumpForce: 16
   Gravity: 40
+  Walking: 0
+  Running: 0
+  Sprinting: 0
   Grounded: 1
   Crouching: 0
-  Running: 0
   CanMove: 1
   Paused: 0
   HasJumped: 0
   HoldingCrouch: 0
   HoldingRun: 0
   extraSpeed: 0
+  WalkingTime: 0
+  RunningTime: 0
   PlayerVelocity: {x: 0, y: -0, z: 0}
   SmoothVelocity: {x: 0.0002, y: -0.0013, z: 0.0041}
   VelocityMagnitude: 0
@@ -9517,6 +9524,7 @@ MonoBehaviour:
   JumpBuffer: 0
   _speed: 125
   _maxSpeed: 80
+  _counterMovement: 0
   _gravity: 40
   rb: {fileID: 0}
   Camera: {fileID: 0}

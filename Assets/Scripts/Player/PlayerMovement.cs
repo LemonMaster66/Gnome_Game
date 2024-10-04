@@ -9,18 +9,24 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float Speed              = 50;
-    public float MaxSpeed           = 80;
-    public float CounterMovement    = 10;
-    public float SlopeSlipperyness  = 2;
-    public float JumpForce          = 8;
-    public float Gravity            = 100;
+    public float Speed               = 50;
+    public float AirSpeed            = 50;
+    public float MaxSpeed            = 80;
+    public float AirMaxSpeed         = 50;
+    public float CounterMovement     = 10;
+    public float AirCounterMovement  = 50;
+    public float SlopeSlipperyness   = 2;
+    public float JumpForce           = 8;
+    public float Gravity             = 100;
 
 
     [Header("States")]
+    public bool  Walking        = false;
+    public bool  Running        = false;
+    public bool  Sprinting      = false;
+
     public bool  Grounded       = true;
     public bool  Crouching      = false;
-    public bool  Running        = false;
 
     public bool  CanMove        = true;
     public bool  Paused         = false;
@@ -32,9 +38,12 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Extras")]
     public float extraSpeed;
+    [Range(0,1)] public float WalkingTime;
+    [Range(0,1)] public float RunningTime;
 
 
     #region Debug Stats
+        [Header("Debug Stats")]
         public Vector3     PlayerVelocity;
         public Vector3     SmoothVelocity;
         public float       VelocityMagnitude;
@@ -59,6 +68,7 @@ public class PlayerMovement : MonoBehaviour
         [Space(8)]
         public float   _speed;
         public float   _maxSpeed;
+        public float   _counterMovement;
         public float   _gravity;
     #endregion
     
@@ -98,6 +108,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if(CoyoteTime > 0) CoyoteTime = Math.Clamp(CoyoteTime - Time.deltaTime, 0, 100);
         if(JumpBuffer > 0) JumpBuffer = Math.Clamp(JumpBuffer - Time.deltaTime, 0, 100);
+
+        WalkingTime = Math.Clamp(WalkingTime + (Walking            ? Time.deltaTime : -Time.deltaTime), 0, 1);
+        RunningTime = Math.Clamp(RunningTime + (Running && Walking ? Time.deltaTime : -Time.deltaTime), 0, 1);
+
+        if(!Sprinting && RunningTime > 0.9) SprintBoost();
     }
 
     void FixedUpdate()
@@ -118,6 +133,8 @@ public class PlayerMovement : MonoBehaviour
                 Vector3 ForwardVelocity = Vector3.Project(rb.linearVelocity, CamF);
                 ForwardVelocityMagnitude = ForwardVelocity.magnitude;
                 ForwardVelocityMagnitude = (float)Math.Round(ForwardVelocityMagnitude, 2);
+
+                WalkingCheck();
             #endregion
 
             SmoothVelocity = Vector3.Slerp(SmoothVelocity, rb.linearVelocity, 0.15f);
@@ -155,8 +172,9 @@ public class PlayerMovement : MonoBehaviour
         if(!Paused && !playerStats.Dead && CanMove)
         {
             Movement = (CamF * MovementY + CamR * MovementX).normalized;
-            rb.AddForce(CorrectMovement * Speed);
-            rb.AddForce(VelocityXZ * -(CounterMovement / 10));
+
+            rb.AddForce(CorrectMovement * Speed);               // Movement
+            rb.AddForce(VelocityXZ * -(CounterMovement / 10));  // CounterMovement
         }
 
         ApplySlopeStickForce();
@@ -233,8 +251,13 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             Running = false;
+            Sprinting = false;
             if(!Crouching) Speed = _speed + extraSpeed;
         }
+    }
+    public void SprintBoost()
+    {
+        Speed = _speed * 2.25f + extraSpeed;
     }
 
 
@@ -296,10 +319,15 @@ public class PlayerMovement : MonoBehaviour
     {
         if(MovementX != 0 || MovementY != 0)
         {
+            Walking = true;
             if(Grounded) return true;
             else return false;
         }
-        else return false;
+        else
+        {
+            Walking = false;
+            return false;
+        }
     }
 
     [Button(DisplayParameters = true, Style = ButtonStyle.FoldoutButton)]

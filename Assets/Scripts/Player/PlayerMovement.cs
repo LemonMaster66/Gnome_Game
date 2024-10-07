@@ -9,24 +9,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-        [HorizontalGroup("Group_Speed", Width = 350)]
     public float Speed               = 50;
-        [LabelWidth(20)]
-        [LabelText("Air")]
-        [HorizontalGroup("Group_Speed")]
-    public float AirSpeed            = 50;
-        [HorizontalGroup("Group_MaxSpeed", Width = 350)]
+    [ReadOnly] public float _speed;
     public float MaxSpeed            = 80;
-        [LabelWidth(20)]
-        [LabelText("Air")]
-        [HorizontalGroup("Group_MaxSpeed")]
-    public float AirMaxSpeed         = 50;
-        [HorizontalGroup("Group_CounterMovement", Width = 350)]
     public float CounterMovement     = 10;
-        [LabelWidth(20)]
-        [LabelText("Air")]
-        [HorizontalGroup("Group_CounterMovement")]
-    public float AirCounterMovement  = 50;
 
     public float SlopeSlipperyness   = 2;
     public float JumpForce           = 8;
@@ -37,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
     public bool  Walking        = false;
     public bool  Running        = false;
     public bool  Sprinting      = false;
+    public bool  Skidding       = false;
 
     public bool  Grounded       = true;
     public bool  Crouching      = false;
@@ -53,6 +40,7 @@ public class PlayerMovement : MonoBehaviour
     public float extraSpeed;
     [Range(0,1)] public float WalkingTime;
     [Range(0,1)] public float RunningTime;
+    [Range(0,1)] public float SkidFactor;
 
 
     #region Debug Stats
@@ -78,7 +66,7 @@ public class PlayerMovement : MonoBehaviour
         public float CoyoteTime;
         public float JumpBuffer;
         [Space(8)]
-        public float   _speed;
+        
         public float   _maxSpeed;
         public float   _counterMovement;
         public float   _gravity;
@@ -121,11 +109,15 @@ public class PlayerMovement : MonoBehaviour
         if(CoyoteTime > 0) CoyoteTime = Math.Clamp(CoyoteTime - Time.deltaTime, 0, 100);
         if(JumpBuffer > 0) JumpBuffer = Math.Clamp(JumpBuffer - Time.deltaTime, 0, 100);
 
-        if(Grounded) WalkingTime = Math.Clamp(WalkingTime + (WalkingCheck() ? Time.deltaTime : -Time.deltaTime), 0, 1);
-        if(Grounded) RunningTime = Math.Clamp(RunningTime + (RunningCheck() ? Time.deltaTime :
-                                                                             -Time.deltaTime * (RunningTime > 0.9 ? 0.5f : 3)), 0, 1);
+        WalkingTime = Math.Clamp(WalkingTime + (Walking ? Time.deltaTime*3 : -Time.deltaTime*3), 0, 1);
+        RunningTime = Math.Clamp(RunningTime + (RunningCheck() ? Time.deltaTime :
+                                                                            -Time.deltaTime * (RunningTime > 0.9 ? 0.5f : 3)), 0, 1);
 
-        SprintState(!Sprinting && RunningTime > 0.9);
+        SkidFactor = Math.Clamp(SkidFactor + Time.deltaTime*1.5f, 0, 1);
+        Skidding = SkidFactor != 1;
+        
+
+        SprintState(RunningTime > 0.9);
     }
 
     void FixedUpdate()
@@ -166,42 +158,21 @@ public class PlayerMovement : MonoBehaviour
         #endregion
         //**********************************
 
-        // Slope Correction
-        CorrectMovement = Movement;
-        if (Physics.Raycast(transform.position + (Vector3.down * 0.9f), Vector3.down, out RaycastHit hit, 1f))
-        {
-            if (Vector3.Angle(hit.normal, Vector3.up) <= 45 && !HasJumped)
-            {
-                Vector3 slopeDirection = Vector3.ProjectOnPlane(Movement, hit.normal).normalized;
-                CorrectMovement = new Vector3(slopeDirection.x, Mathf.Clamp(slopeDirection.y, -0.5f, 0.2f), slopeDirection.z);
-
-                Tools.DrawThickRay(hit.point, rb.linearVelocity, Color.red, 0, 0.001f);
-                Tools.DrawThickRay(hit.point, CorrectMovement*10, Color.green, 0, 0.001f);
-            }
-        }
-
         
         // Movement Code
         if(!Paused && !playerStats.Dead && CanMove)
         {
             Movement = (CamF * MovementY + CamR * MovementX).normalized;
+            CalculateCorrectiveMovement();
 
-            rb.AddForce(CorrectMovement * Speed);               // Movement
-            rb.AddForce(VelocityXZ * -(CounterMovement / 10));  // CounterMovement
+            rb.AddForce(CorrectMovement * CalculateMoveSpeed());             // Movement
+            if(Grounded) rb.AddForce(VelocityXZ * -(CounterMovement / 10));  // CounterMovement
         }
 
-        ApplySlopeStickForce();
-
-        if(!Grounded && !HasJumped && rb.linearVelocity.y > 0 && slopeAngle < 45)
-        {
-            if (Physics.Raycast(transform.position, Vector3.down, 1f))
-                rb.AddForce(Vector3.down*200, ForceMode.Acceleration);
-        }
+        CalculateSlopeStickForce();
 
 
-        
-
-        if(VelocityXZ.magnitude > 0.5 && Grounded) transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 0.6f);
+        if(VelocityXZ.magnitude > 0.2)  transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 0.6f);
 
         #region Rounding Values
             PlayerVelocity      = rb.linearVelocity;
@@ -222,7 +193,11 @@ public class PlayerMovement : MonoBehaviour
         MovementX = inputVector.x;
         MovementY = inputVector.y;
 
-        if(MovementX == 0 && MovementY == 0 && Running) Halt();
+        Vector3 movement = (CamF * MovementY + CamR * MovementX).normalized;
+        if(Vector3.Dot(movement, rb.linearVelocity) < -0.8 && Grounded)
+        {
+            if(Running && !Skidding && rb.linearVelocity.magnitude > 5) Skid();
+        }
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -261,19 +236,16 @@ public class PlayerMovement : MonoBehaviour
         if(state && !Crouching)
         {
             Running = true;
-            Speed = _speed * 1.6f + extraSpeed;
         }
         else
         {
             Running = false;
             Sprinting = false;
-            if(!Crouching) Speed = _speed + extraSpeed;
         }
     }
     public void SprintState(bool state)
     {
-        if(state) Speed = _speed * 2.25f + extraSpeed;
-        else RunState(Running);
+        Sprinting = state;
     }
 
     //***********************************************************************
@@ -288,6 +260,88 @@ public class PlayerMovement : MonoBehaviour
     public void Skid()
     {
         Debug.Log("Skid");
+        Skidding = true;
+
+        SkidFactor = 0;
+        RunningTime = 0;
+    }
+
+
+    //***********************************************************************
+    //***********************************************************************
+    //Calculations
+
+    public float CalculateMoveSpeed()
+    {
+        if(Grounded)
+        {
+            float speedValue = Speed;
+
+            speedValue *= Running   ? 1.5f : 1;  // Run Boost
+            speedValue *= Sprinting ? 1.5f : 1;  // Sprint Boost
+            
+            speedValue *= WalkingTime;        // Accelerate Hinder
+            speedValue *= SkidFactor;         // Skid Hinder
+            speedValue *= Crouching ? 0 : 1;  // Crouch Hinder
+
+            _speed = speedValue;
+            return speedValue;
+        }
+
+        _speed = Speed/2 * WalkingTime;
+        return _speed;
+    }
+
+
+    public float CalculateMaxSpeed()
+    {
+        float maxspeedValue = MaxSpeed;
+        if(Grounded) MaxSpeed = _maxSpeed;
+
+        return MaxSpeed;
+    }
+
+
+    private void CalculateCorrectiveMovement()
+    {
+        // Slope Correction
+        CorrectMovement = Movement;
+        if (Physics.Raycast(transform.position + (Vector3.down * 0.9f), Vector3.down, out RaycastHit hit, 1f))
+        {
+            if (Vector3.Angle(hit.normal, Vector3.up) <= 45 && !HasJumped)
+            {
+                Vector3 slopeDirection = Vector3.ProjectOnPlane(Movement, hit.normal).normalized;
+                CorrectMovement = new Vector3(slopeDirection.x, Mathf.Clamp(slopeDirection.y, -0.5f, 0.2f), slopeDirection.z);
+
+                Tools.DrawThickRay(hit.point, rb.linearVelocity, Color.red, 0, 0.001f);
+                Tools.DrawThickRay(hit.point, CorrectMovement*10, Color.green, 0, 0.001f);
+            }
+        }
+    }
+
+
+    private void CalculateSlopeStickForce()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position+(Vector3.down*0.9f), Vector3.down, out hit, 1.5f))
+        {
+            slopeVector = hit.normal;
+            slopeAngle = Vector3.Angle(slopeVector, Vector3.up);
+
+            if (slopeAngle > 0 && slopeAngle <= 45 && !HasJumped)
+            {
+                // Calculate downward force based on the slope angle
+                slopeCorrectionVector = Vector3.ProjectOnPlane(Vector3.down, slopeVector).normalized*-1;
+                Debug.DrawRay(hit.point, slopeCorrectionVector * 3, Color.white);
+                rb.AddForce(slopeCorrectionVector * (slopeAngle/(SlopeSlipperyness/100) - (slopeAngle-1.3f)), ForceMode.Force);
+            }
+        }
+        // Overshoot
+        if(!Grounded && !HasJumped && rb.linearVelocity.y > 0 && slopeAngle < 45)
+        {
+            if (Physics.Raycast(transform.position, Vector3.down, 1f))
+                rb.AddForce(Vector3.down*200, ForceMode.Acceleration);
+        }
     }
 
 
@@ -312,33 +366,11 @@ public class PlayerMovement : MonoBehaviour
         // Get the velocity direction
         Vector3 newVelocity = rb.linearVelocity;
         newVelocity.y = 0f;
-        newVelocity = Vector3.ClampMagnitude(newVelocity, MaxSpeed);
+        newVelocity = Vector3.ClampMagnitude(newVelocity, CalculateMaxSpeed());
         newVelocity.y = rb.linearVelocity.y;
         rb.linearVelocity = newVelocity;
     }
 
-    private void ApplySlopeStickForce()
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position+(Vector3.down*0.9f), Vector3.down, out hit, 1.5f))
-        {
-            slopeVector = hit.normal;
-            slopeAngle = Vector3.Angle(slopeVector, Vector3.up);
-
-            if (slopeAngle > 0 && slopeAngle <= 45 && !HasJumped)
-            {
-                // Calculate downward force based on the slope angle
-                slopeCorrectionVector = Vector3.ProjectOnPlane(Vector3.down, slopeVector).normalized*-1;
-                Debug.DrawRay(hit.point, slopeCorrectionVector * 3, Color.white);
-                rb.AddForce(slopeCorrectionVector * (slopeAngle/(SlopeSlipperyness/100) - (slopeAngle-1.3f)), ForceMode.Force);
-            }
-        }
-    }
-
-    // public void stepClimb(float Vector)
-	// {
-    //     rb.AddForce((Vector3.up * Vector * Time.deltaTime)/10);
-	// }
 
     public void SetGrounded(bool state) 
     {

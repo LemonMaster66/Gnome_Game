@@ -9484,7 +9484,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cc4f88b974c3d44eb952df0237e4c59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 70
+  Speed: 100
+  _speed: 125
   AirSpeed: 50
   MaxSpeed: 80
   AirMaxSpeed: 50
@@ -9496,6 +9497,7 @@ MonoBehaviour:
   Walking: 0
   Running: 0
   Sprinting: 0
+  Skidding: 0
   Grounded: 1
   Crouching: 0
   CanMove: 1
@@ -9506,6 +9508,7 @@ MonoBehaviour:
   extraSpeed: 0
   WalkingTime: 0
   RunningTime: 0
+  SkidFactor: 1
   PlayerVelocity: {x: 0, y: -0, z: 0}
   SmoothVelocity: {x: 0.0002, y: -0.0013, z: 0.0041}
   VelocityMagnitude: 0
@@ -9522,7 +9525,6 @@ MonoBehaviour:
   CorrectMovement: {x: 0, y: 0, z: 0}
   CoyoteTime: 0
   JumpBuffer: 0
-  _speed: 125
   _maxSpeed: 80
   _counterMovement: 0
   _gravity: 40
@@ -9698,7 +9700,7 @@ MonoBehaviour:
     m_ActionId: 4b3d35c4-9044-4312-a821-40f03814cca1
     m_ActionName: 'Player/SecondaryAttack[/Mouse/rightButton]'
   m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
+  m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}

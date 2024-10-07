@@ -27,7 +27,7 @@
                     "name": "Jump",
                     "type": "Button",
                     "id": "396de99d-2379-4d90-9382-7411da425f5c",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -36,7 +36,7 @@
                     "name": "Run",
                     "type": "Button",
                     "id": "9fbbe6fa-583a-4748-a354-c859889ebfab",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -45,7 +45,7 @@
                     "name": "Crouch",
                     "type": "Button",
                     "id": "5983c4cb-07cb-40fd-b230-885e05cc6c28",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -54,7 +54,7 @@
                     "name": "Interact",
                     "type": "Button",
                     "id": "94d47358-6446-4dc4-9cb2-2139616c32e6",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -63,7 +63,7 @@
                     "name": "PrimaryAttack",
                     "type": "Button",
                     "id": "a099bf4a-f58f-43ef-a033-dc04b92fbed4",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -72,7 +72,7 @@
                     "name": "SecondaryAttack",
                     "type": "Button",
                     "id": "4b3d35c4-9044-4312-a821-40f03814cca1",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -136,6 +136,17 @@
                 },
                 {
                     "name": "",
+                    "id": "48143275-0099-49f5-848b-3497591f7444",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "8c8e490b-c610-4785-884f-f04217b23ca4",
                     "path": "<Pointer>/delta",
                     "interactions": "",
@@ -158,6 +169,17 @@
                 },
                 {
                     "name": "",
+                    "id": "65db445c-687e-42d1-865b-23032ad06abd",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "59b6dd0d-6635-42ac-8040-ed066dfb1619",
                     "path": "<Keyboard>/ctrl",
                     "interactions": "",
@@ -174,6 +196,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
+                    "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "06013abf-3e1b-4f66-b729-6a068130ef63",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
                     "action": "Run",
                     "isComposite": false,
                     "isPartOfComposite": false

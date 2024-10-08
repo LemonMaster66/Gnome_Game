@@ -9486,14 +9486,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 100
   _speed: 125
-  AirSpeed: 50
   MaxSpeed: 80
-  AirMaxSpeed: 50
+  _maxSpeed: 80
   CounterMovement: 100
-  AirCounterMovement: 50
-  SlopeSlipperyness: 63
   JumpForce: 16
   Gravity: 40
+  SlopeSlipperyness: 63
+  WalkingTime: 0
+  RunningTime: 0
+  SkidFactor: 1
   Walking: 0
   Running: 0
   Sprinting: 0
@@ -9505,10 +9506,6 @@ MonoBehaviour:
   HasJumped: 0
   HoldingCrouch: 0
   HoldingRun: 0
-  extraSpeed: 0
-  WalkingTime: 0
-  RunningTime: 0
-  SkidFactor: 1
   PlayerVelocity: {x: 0, y: -0, z: 0}
   SmoothVelocity: {x: 0.0002, y: -0.0013, z: 0.0041}
   VelocityMagnitude: 0
@@ -9525,7 +9522,6 @@ MonoBehaviour:
   CorrectMovement: {x: 0, y: 0, z: 0}
   CoyoteTime: 0
   JumpBuffer: 0
-  _maxSpeed: 80
   _counterMovement: 0
   _gravity: 40
   rb: {fileID: 0}

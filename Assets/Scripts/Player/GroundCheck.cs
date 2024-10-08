@@ -55,7 +55,7 @@ public class GroundCheck : MonoBehaviour
         Grounded = false;
 
         player.CoyoteTime = 0.3f;
-        player.MaxSpeed = Math.Clamp(player.VelocityXZ.magnitude, 7, player._maxSpeed);
+        player._maxSpeed = Math.Clamp(player.VelocityXZ.magnitude, 7, player._maxSpeed);
     }
 
     private void OnTriggerStay(Collider other)

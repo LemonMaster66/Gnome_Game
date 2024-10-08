@@ -9,38 +9,48 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+        [HorizontalGroup("Speed", 0.85f)]
     public float Speed               = 50;
-    [ReadOnly] public float _speed;
+        [HorizontalGroup("Speed")]
+        [DisplayAsString]
+        [HideLabel]
+    public float _speed;
+
+        [HorizontalGroup("MaxSpeed", 0.85f)]
     public float MaxSpeed            = 80;
+        [HorizontalGroup("MaxSpeed")]
+        [DisplayAsString]
+        [HideLabel]
+    public float _maxSpeed;
     public float CounterMovement     = 10;
 
-    public float SlopeSlipperyness   = 2;
+[Space(10)]
+
     public float JumpForce           = 8;
     public float Gravity             = 100;
-
-
-    [Header("States")]
-    public bool  Walking        = false;
-    public bool  Running        = false;
-    public bool  Sprinting      = false;
-    public bool  Skidding       = false;
-
-    public bool  Grounded       = true;
-    public bool  Crouching      = false;
-
-    public bool  CanMove        = true;
-    public bool  Paused         = false;
-
-    public bool  HasJumped      = false;
-    public bool  HoldingCrouch  = false;
-    public bool  HoldingRun     = false;
+    public float SlopeSlipperyness   = 2;
 
 
     [Header("Extras")]
-    public float extraSpeed;
     [Range(0,1)] public float WalkingTime;
     [Range(0,1)] public float RunningTime;
+[PropertySpace(SpaceAfter = 10, SpaceBefore = 0)]
     [Range(0,1)] public float SkidFactor;
+
+    [FoldoutGroup("States")] public bool  Walking        = false;
+    [FoldoutGroup("States")] public bool  Running        = false;
+    [FoldoutGroup("States")] public bool  Sprinting      = false;
+    [FoldoutGroup("States")] public bool  Skidding       = false;
+[Space(5)]
+    [FoldoutGroup("States")] public bool  Grounded       = true;
+    [FoldoutGroup("States")] public bool  Crouching      = false;
+[Space(5)]
+    [FoldoutGroup("States")] public bool  CanMove        = true;
+    [FoldoutGroup("States")] public bool  Paused         = false;
+[Space(5)]
+    [FoldoutGroup("States")] public bool  HasJumped      = false;
+    [FoldoutGroup("States")] public bool  HoldingCrouch  = false;
+    [FoldoutGroup("States")] public bool  HoldingRun     = false;
 
 
     #region Debug Stats
@@ -67,7 +77,6 @@ public class PlayerMovement : MonoBehaviour
         public float JumpBuffer;
         [Space(8)]
         
-        public float   _maxSpeed;
         public float   _counterMovement;
         public float   _gravity;
     #endregion
@@ -293,12 +302,12 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    public float CalculateMaxSpeed()
+    float CalculateMaxSpeed()
     {
-        float maxspeedValue = MaxSpeed;
-        if(Grounded) MaxSpeed = _maxSpeed;
+        float maxspeedValue = _maxSpeed;
+        if(Grounded) _maxSpeed = MaxSpeed;
 
-        return MaxSpeed;
+        return _maxSpeed;
     }
 
 

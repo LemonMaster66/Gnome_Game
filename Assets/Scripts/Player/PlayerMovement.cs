@@ -28,7 +28,8 @@ public class PlayerMovement : MonoBehaviour
 
     public float JumpForce           = 8;
     public float Gravity             = 100;
-    public float SlopeSlipperyness   = 2;
+        [Range(0,1)]
+    public float SlopeStick          = 1;
 
 
     [Header("Extras")]
@@ -332,26 +333,28 @@ public class PlayerMovement : MonoBehaviour
     private void CalculateSlopeStickForce()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position+(Vector3.down*0.9f), Vector3.down, out hit, 1.5f))
+        if (Physics.Raycast(transform.position + (Vector3.down * 0.9f), Vector3.down, out hit, 1.5f))
         {
             slopeVector = hit.normal;
             slopeAngle = Vector3.Angle(slopeVector, Vector3.up);
 
             if (slopeAngle > 0 && slopeAngle <= 45 && !HasJumped)
             {
-                // Calculate downward force based on the slope angle
-                slopeCorrectionVector = Vector3.ProjectOnPlane(Vector3.down, slopeVector).normalized*-1;
-                Debug.DrawRay(hit.point, slopeCorrectionVector * 3, Color.white);
-                rb.AddForce(slopeCorrectionVector * (slopeAngle/(SlopeSlipperyness/100) - (slopeAngle-1.3f)), ForceMode.Force);
+                // Calculate the necessary force to counteract gravity along the slope
+                Vector3 slopeCorrectionVector = Vector3.ProjectOnPlane(Physics.gravity, slopeVector);
+
+                // Apply the slope correction force
+                rb.AddForce(-slopeCorrectionVector* (SlopeStick*4), ForceMode.Acceleration);
             }
         }
-        // Overshoot
-        if(!Grounded && !HasJumped && rb.linearVelocity.y > 0 && slopeAngle < 45)
+        // Overshoot correction
+        if (!Grounded && !HasJumped && rb.linearVelocity.y > 0 && slopeAngle < 45)
         {
             if (Physics.Raycast(transform.position, Vector3.down, 1f))
-                rb.AddForce(Vector3.down*200, ForceMode.Acceleration);
+                rb.AddForce(Vector3.down * 200, ForceMode.Acceleration);
         }
     }
+
 
 
     //***********************************************************************
